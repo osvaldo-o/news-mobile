@@ -1,4 +1,4 @@
-package osvaldo.app.news.mobile.ui.theme
+package osvaldo.app.news.mobile.core.theme
 
 import androidx.compose.ui.graphics.Color
 
