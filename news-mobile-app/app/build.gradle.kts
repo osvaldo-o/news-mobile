@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -69,7 +70,13 @@ dependencies {
 
     // Retrofit
     implementation(libs.squaredup.retrofit2)
-    implementation(libs.squaredup.retrofit2.converter)
+
+    // Retrofit with Kotlin serialization Converter
+    implementation(libs.retrofit2.kotlinx.serialization.converter)
+    implementation(libs.okhttp)
+
+    // Kotlin serialization
+    implementation(libs.kotlinx.serialization.json)
 
     // Coil
     implementation(libs.io.coil)
