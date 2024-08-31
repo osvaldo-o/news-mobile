@@ -4,6 +4,8 @@ import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFact
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import osvaldo.app.news.mobile.data.datasource.remote.NewsService
+import osvaldo.app.news.mobile.data.repository.NewsRepositoryImpl
+import osvaldo.app.news.mobile.domain.repository.NewsRepository
 import retrofit2.Retrofit
 
 class AppContainerImpl : AppContainer {
@@ -18,5 +20,7 @@ class AppContainerImpl : AppContainer {
     private val retrofiService: NewsService by lazy {
         retrofit.create(NewsService::class.java)
     }
+    override val newsRepository: NewsRepository
+        get() = NewsRepositoryImpl(retrofiService)
 
 }
