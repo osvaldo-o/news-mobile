@@ -1,17 +1,22 @@
 package osvaldo.app.news.mobile.ui.screen.home
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
+import osvaldo.app.news.mobile.R
 import osvaldo.app.news.mobile.ui.viewmodel.NewsEvent
 import osvaldo.app.news.mobile.ui.viewmodel.NewsState
 import osvaldo.app.news.mobile.ui.viewmodel.UiState
@@ -34,11 +39,15 @@ fun HomeScreen(
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-           SearchView(
-               searchValue = uiState.search,
-               onValueChange = { onEvent(NewsEvent.OnChangeSearch(it)) },
-               search = { onEvent(NewsEvent.SearchNews) }
-           )
+            SearchView(
+                searchValue = uiState.search,
+                onValueChange = { onEvent(NewsEvent.OnChangeSearch(it)) },
+                search = { onEvent(NewsEvent.SearchNews) },
+                onFilterActivated = { onEvent(NewsEvent.OnFilterActivated) }
+            )
+            AnimatedVisibility(visible = uiState.isFilterActivated) {
+                FilterView()
+            }
             when(uiState.newsState) {
                 NewsState.Error -> ErrorView()
                 NewsState.Loading -> LoadingView()

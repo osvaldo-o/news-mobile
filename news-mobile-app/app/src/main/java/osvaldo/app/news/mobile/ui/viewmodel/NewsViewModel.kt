@@ -31,7 +31,12 @@ class NewsViewModel(
             is NewsEvent.OnNewsDetail -> onNewsDetail(event.news)
             is NewsEvent.OnChangeSearch -> onChangeSearch(event.search)
             NewsEvent.SearchNews -> getNews(_state.value.search)
+            NewsEvent.OnFilterActivated -> onFilterActivated()
         }
+    }
+
+    private fun onFilterActivated() {
+        _state.update { it.copy(isFilterActivated = !it.isFilterActivated) }
     }
 
     private fun onChangeSearch(search: String) {
