@@ -29,7 +29,13 @@ class NewsViewModel(
     fun onEvent(event: NewsEvent) {
         when(event) {
             is NewsEvent.OnNewsDetail -> onNewsDetail(event.news)
+            is NewsEvent.OnChangeSearch -> onChangeSearch(event.search)
+            NewsEvent.SearchNews -> getNews(_state.value.search)
         }
+    }
+
+    private fun onChangeSearch(search: String) {
+        _state.update { it.copy(search = search) }
     }
 
     private fun onNewsDetail(news: News?) {
