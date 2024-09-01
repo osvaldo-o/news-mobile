@@ -44,7 +44,9 @@ fun HomeScreen(
             AnimatedVisibility(visible = uiState.isFilterActivated) {
                 FilterView(
                     language = uiState.language,
-                    onChangeLanguage = { onEvent(NewsEvent.OnChangeLanguage(it)) }
+                    onChangeLanguage = { onEvent(NewsEvent.OnChangeLanguage(it)) },
+                    sortBy = uiState.sortBy,
+                    onChangeSortBy = { onEvent(NewsEvent.OnChangeSortBy(it)) }
                 )
             }
             when(uiState.newsState) {

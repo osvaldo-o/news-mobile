@@ -7,6 +7,6 @@ data class UiState(
     val search: String = "Alien",
     val newsDetail: News? = null,
     val isFilterActivated: Boolean = false,
-    val language: String = "all",
-    val sortBy: String = ""
+    val language: String = "es",
+    val sortBy: String = "popularity"
 )

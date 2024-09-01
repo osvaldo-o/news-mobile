@@ -12,7 +12,7 @@ interface NewsService {
         @Query("q") search: String,
         @Query("pageSize") pageSize: Int = 30,
         @Query("language") language: String,
-        @Query("sortBy") sortBy: String = "publishedAt",
+        @Query("sortBy") sortBy: String ,
         @Query("apiKey") apiKey: String = BuildConfig.API_KEY
     ): Response
 

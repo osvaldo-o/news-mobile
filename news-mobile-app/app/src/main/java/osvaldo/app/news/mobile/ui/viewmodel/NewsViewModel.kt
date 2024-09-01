@@ -33,7 +33,13 @@ class NewsViewModel(
             NewsEvent.OnFilterActivated -> onFilterActivated()
             is NewsEvent.OnNewsDetail -> onNewsDetail(event.news)
             NewsEvent.SearchNews -> getNews()
+            is NewsEvent.OnChangeSortBy -> onChangeSortBy(event.sortBy)
         }
+    }
+
+    private fun onChangeSortBy(sortBy: String) {
+        _state.update { it.copy(sortBy = sortBy) }
+        getNews()
     }
 
     private fun onChangeLanguage(language: String) {
@@ -55,12 +61,13 @@ class NewsViewModel(
 
     private fun getNews(
         search: String = _state.value.search,
-        language: String = _state.value.language
+        language: String = _state.value.language,
+        sortBy: String = _state.value.sortBy
     ) {
         viewModelScope.launch {
             _state.update { it.copy(newsState = NewsState.Loading) }
             try {
-                val news = repository.getEverything(search, language)
+                val news = repository.getEverything(search, language, sortBy)
                 _state.update { it.copy(newsState = NewsState.Success(news)) }
             } catch (e: Exception) {
                 e.printStackTrace()

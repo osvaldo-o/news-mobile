@@ -8,4 +8,5 @@ sealed interface NewsEvent {
     data object SearchNews: NewsEvent
     data object OnFilterActivated: NewsEvent
     data class OnChangeLanguage(val language: String): NewsEvent
+    data class OnChangeSortBy(val sortBy: String): NewsEvent
 }

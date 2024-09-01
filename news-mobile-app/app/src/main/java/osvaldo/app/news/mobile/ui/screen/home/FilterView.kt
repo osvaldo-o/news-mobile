@@ -29,7 +29,9 @@ import osvaldo.app.news.mobile.data.local.DataFilter
 @Composable
 fun FilterView(
     language: String,
-    onChangeLanguage: (String) -> Unit
+    onChangeLanguage: (String) -> Unit,
+    sortBy: String,
+    onChangeSortBy: (String) -> Unit
 ) {
     var filterLanguage by remember {
         mutableStateOf(false)
@@ -57,11 +59,11 @@ fun FilterView(
         )
         FilterItemView(
             title = stringResource(id = R.string.title_sort_by),
-            valueCurrent = "popularity",
+            valueCurrent = sortBy,
             values = DataFilter.sortBy,
             onSelect = filterSortBy,
             onChageSelect = { filterSortBy = !filterSortBy  },
-            select = { }
+            select = onChangeSortBy
         )
     }
 }
