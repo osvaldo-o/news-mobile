@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import osvaldo.app.news.mobile.NewsApplication
+import osvaldo.app.news.mobile.domain.model.News
 import osvaldo.app.news.mobile.domain.repository.NewsRepository
 import retrofit2.HttpException
 
@@ -22,19 +23,31 @@ class NewsViewModel(
     val uiState = _state.asStateFlow()
 
     init {
-        getNews(search = "Star wars")
+        getNews(search = "alien")
+    }
+
+    fun onEvent(event: NewsEvent) {
+        when(event) {
+            is NewsEvent.OnNewsDetail -> onNewsDetail(event.news)
+        }
+    }
+
+    private fun onNewsDetail(news: News?) {
+        _state.update { it.copy(newsDetail = news) }
     }
 
     private fun getNews(search: String) {
         viewModelScope.launch {
-            _state.update { it.copy(news = NewsState.Loading) }
+            _state.update { it.copy(newsState = NewsState.Loading) }
             try {
                 val news = repository.getEverything(search)
-                _state.update { it.copy(news = NewsState.Success(news)) }
+                _state.update { it.copy(newsState = NewsState.Success(news)) }
             } catch (e: Exception) {
-                _state.update { it.copy(news = NewsState.Error) }
+                e.printStackTrace()
+                _state.update { it.copy(newsState = NewsState.Error) }
             } catch (e: HttpException) {
-                _state.update { it.copy(news = NewsState.Error) }
+                e.printStackTrace()
+                _state.update { it.copy(newsState = NewsState.Error) }
             }
         }
     }

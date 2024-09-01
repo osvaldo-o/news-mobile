@@ -5,5 +5,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Response(
     val status: String,
-    val article: List<NewsApi>
+    val articles: List<NewsApi>
 )

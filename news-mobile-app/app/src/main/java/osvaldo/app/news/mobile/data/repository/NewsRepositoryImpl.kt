@@ -7,5 +7,5 @@ import osvaldo.app.news.mobile.domain.repository.NewsRepository
 
 class NewsRepositoryImpl(private val newsService: NewsService) : NewsRepository {
     override suspend fun getEverything(search: String): List<News> =
-        newsService.getEverything(search = search).article.toNews()
+        newsService.getEverything(search = search).articles.toNews()
 }
