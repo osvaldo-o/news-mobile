@@ -7,4 +7,5 @@ sealed interface NewsEvent {
     data class OnChangeSearch(val search: String): NewsEvent
     data object SearchNews: NewsEvent
     data object OnFilterActivated: NewsEvent
+    data class OnChangeLanguage(val language: String): NewsEvent
 }

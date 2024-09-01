@@ -11,8 +11,8 @@ interface NewsService {
     suspend fun getEverything(
         @Query("q") search: String,
         @Query("pageSize") pageSize: Int = 30,
-        @Query("language") language: String = "es",
-        @Query("sortBy") sortBy: String = "popularity",
+        @Query("language") language: String,
+        @Query("sortBy") sortBy: String = "publishedAt",
         @Query("apiKey") apiKey: String = BuildConfig.API_KEY
     ): Response
 

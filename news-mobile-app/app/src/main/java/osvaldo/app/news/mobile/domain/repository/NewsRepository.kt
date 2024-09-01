@@ -4,6 +4,6 @@ import osvaldo.app.news.mobile.domain.model.News
 
 interface NewsRepository {
 
-    suspend fun getEverything(search: String): List<News>
+    suspend fun getEverything(search: String, language: String): List<News>
 
 }

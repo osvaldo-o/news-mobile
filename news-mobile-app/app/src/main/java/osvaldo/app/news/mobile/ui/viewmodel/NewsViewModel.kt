@@ -23,16 +23,22 @@ class NewsViewModel(
     val uiState = _state.asStateFlow()
 
     init {
-        getNews(search = "alien")
+        getNews()
     }
 
     fun onEvent(event: NewsEvent) {
         when(event) {
-            is NewsEvent.OnNewsDetail -> onNewsDetail(event.news)
+            is NewsEvent.OnChangeLanguage -> onChangeLanguage(event.language)
             is NewsEvent.OnChangeSearch -> onChangeSearch(event.search)
-            NewsEvent.SearchNews -> getNews(_state.value.search)
             NewsEvent.OnFilterActivated -> onFilterActivated()
+            is NewsEvent.OnNewsDetail -> onNewsDetail(event.news)
+            NewsEvent.SearchNews -> getNews()
         }
+    }
+
+    private fun onChangeLanguage(language: String) {
+        _state.update { it.copy(language = language) }
+        getNews()
     }
 
     private fun onFilterActivated() {
@@ -47,11 +53,14 @@ class NewsViewModel(
         _state.update { it.copy(newsDetail = news) }
     }
 
-    private fun getNews(search: String) {
+    private fun getNews(
+        search: String = _state.value.search,
+        language: String = _state.value.language
+    ) {
         viewModelScope.launch {
             _state.update { it.copy(newsState = NewsState.Loading) }
             try {
-                val news = repository.getEverything(search)
+                val news = repository.getEverything(search, language)
                 _state.update { it.copy(newsState = NewsState.Success(news)) }
             } catch (e: Exception) {
                 e.printStackTrace()
