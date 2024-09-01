@@ -30,7 +30,7 @@ fun NewsView(
     onNewsDetail: (News) -> Unit
 ) {
     LazyColumn(
-        modifier = Modifier.padding(6.dp),
+        modifier = Modifier.padding(horizontal = 8.dp, vertical = 14.dp),
         verticalArrangement = Arrangement.spacedBy(20.dp)
     ) {
         items(news) {
