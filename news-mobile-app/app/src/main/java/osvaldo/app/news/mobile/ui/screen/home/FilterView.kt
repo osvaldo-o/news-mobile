@@ -8,7 +8,9 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
+import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -92,7 +94,7 @@ fun FilterItemView(
                 Text(text = valueCurrent, style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.Light)
             }
             Icon(
-                imageVector = Icons.Default.KeyboardArrowLeft,
+                imageVector = if(!onSelect) Icons.Default.KeyboardArrowLeft else Icons.Default.KeyboardArrowDown,
                 contentDescription = null,
                 modifier = Modifier.clickable { onChageSelect() }
             )

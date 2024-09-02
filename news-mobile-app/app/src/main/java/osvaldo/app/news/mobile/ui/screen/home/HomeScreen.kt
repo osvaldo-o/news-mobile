@@ -13,6 +13,8 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import osvaldo.app.news.mobile.R
 import osvaldo.app.news.mobile.ui.viewmodel.NewsEvent
 import osvaldo.app.news.mobile.ui.viewmodel.NewsState
 import osvaldo.app.news.mobile.ui.viewmodel.UiState
@@ -26,7 +28,7 @@ fun HomeScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = "Noticias del Mundo") },
+                title = { Text(text = stringResource(id = R.string.tittle_home)) },
             )
         }
     ) { paddingValues ->
@@ -77,7 +79,7 @@ fun CenterScreen(
 @Composable
 fun ErrorView() {
     CenterScreen {
-        Text(text = "Sucedio un error")
+        Text(text = stringResource(id = R.string.error_message))
     }
 }
 

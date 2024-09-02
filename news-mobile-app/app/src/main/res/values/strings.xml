@@ -3,5 +3,9 @@
     <string name="title_filter">Busqueda avanzada</string>
     <string name="title_language">Language</string>
     <string name="title_sort_by">Sort by</string>
+    <string name="tittle_home">Noticias del Mundo</string>
+    <string name="error_message">Sucedio un error</string>
+    <string name="see_more">Ver más</string>
     <string name="read_full_news">Noticia completa</string>
+    <string name="no_news_found">No se encontraron noticias</string>
 </resources>

@@ -18,10 +18,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import osvaldo.app.news.mobile.R
 import osvaldo.app.news.mobile.domain.model.News
 
 @Composable
@@ -29,8 +32,12 @@ fun NewsView(
     news: List<News>,
     onNewsDetail: (News) -> Unit
 ) {
+    if (news.isEmpty()) {
+        Text(text = stringResource(id = R.string.no_news_found))
+        return
+    }
     LazyColumn(
-        modifier = Modifier.padding(horizontal = 8.dp, vertical = 14.dp),
+        modifier = Modifier.padding(horizontal = 10.dp, vertical = 14.dp),
         verticalArrangement = Arrangement.spacedBy(20.dp)
     ) {
         items(news) {
@@ -54,6 +61,7 @@ fun NewsItem(
             model = news.urlToImage,
             contentDescription = null,
             contentScale = ContentScale.FillWidth,
+            placeholder = painterResource(id = R.drawable.loading_img),
             modifier = Modifier
                 .weight(0.35f)
                 .clip(RoundedCornerShape(8.dp))
@@ -79,9 +87,9 @@ fun NewsItem(
             ) {
                 Spacer(modifier = Modifier.weight(1f))
                 Text(
-                    text = "Ver más",
+                    text = stringResource(id = R.string.see_more),
                     style = MaterialTheme.typography.bodySmall,
-                    fontWeight = FontWeight.SemiBold,
+                    fontWeight = FontWeight.Bold,
                     modifier = Modifier.clickable {
                         onNewsDetail()
                     }
