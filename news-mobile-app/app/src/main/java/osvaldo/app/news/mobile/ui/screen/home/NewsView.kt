@@ -33,7 +33,11 @@ fun NewsView(
     onNewsDetail: (News) -> Unit
 ) {
     if (news.isEmpty()) {
-        Text(text = stringResource(id = R.string.no_news_found))
+        Text(
+            text = stringResource(id = R.string.no_news_found),
+            modifier = Modifier.padding(16.dp),
+            style = MaterialTheme.typography.bodyLarge
+        )
         return
     }
     LazyColumn(
