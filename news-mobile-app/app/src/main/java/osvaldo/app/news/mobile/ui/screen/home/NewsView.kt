@@ -1,5 +1,8 @@
 package osvaldo.app.news.mobile.ui.screen.home
 
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -9,7 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
@@ -27,10 +30,13 @@ import coil.compose.AsyncImage
 import osvaldo.app.news.mobile.R
 import osvaldo.app.news.mobile.domain.model.News
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun NewsView(
     news: List<News>,
-    onNewsDetail: (News) -> Unit
+    onNewsDetail: (News, index: Int) -> Unit,
+    sharedTransitionScope: SharedTransitionScope,
+    animatedVisibilityScope: AnimatedVisibilityScope
 ) {
     if (news.isEmpty()) {
         Text(
@@ -44,16 +50,26 @@ fun NewsView(
         modifier = Modifier.padding(horizontal = 10.dp, vertical = 14.dp),
         verticalArrangement = Arrangement.spacedBy(20.dp)
     ) {
-        items(news) {
-            NewsItem(news = it, onNewsDetail = { onNewsDetail(it) })
+        itemsIndexed(news) { index, news ->
+            NewsItem(
+                news = news,
+                index = index,
+                onNewsDetail = { onNewsDetail(news, index) },
+                sharedTransitionScope = sharedTransitionScope,
+                animatedVisibilityScope = animatedVisibilityScope
+            )
         }
     }
 }
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun NewsItem(
     news: News,
-    onNewsDetail: () -> Unit
+    index: Int,
+    onNewsDetail: () -> Unit,
+    sharedTransitionScope: SharedTransitionScope,
+    animatedVisibilityScope: AnimatedVisibilityScope
 ) {
     Row(
         Modifier
@@ -61,43 +77,59 @@ fun NewsItem(
             .wrapContentHeight(),
         horizontalArrangement = Arrangement.spacedBy(6.dp)
     ) {
-        AsyncImage(
-            model = news.urlToImage,
-            contentDescription = null,
-            contentScale = ContentScale.FillWidth,
-            placeholder = painterResource(id = R.drawable.loading_img),
-            modifier = Modifier
-                .weight(0.35f)
-                .clip(RoundedCornerShape(8.dp))
-        )
-        Column(
-            Modifier.weight(0.65f),
-            verticalArrangement = Arrangement.spacedBy(6.dp)
-        ) {
-            Text(
-                text = news.title,
-                style = MaterialTheme.typography.titleSmall,
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Left
+        with(sharedTransitionScope) {
+            AsyncImage(
+                model = news.urlToImage,
+                contentDescription = null,
+                contentScale = ContentScale.FillWidth,
+                placeholder = painterResource(id = R.drawable.loading_img),
+                modifier = Modifier
+                    .weight(0.35f)
+                    .clip(RoundedCornerShape(8.dp))
+                    .sharedElement(
+                        rememberSharedContentState(key = "image-$index"),
+                        animatedVisibilityScope = animatedVisibilityScope
+                    )
             )
-            Text(
-                text = news.description.substring(0, news.description.length / 2),
-                style = MaterialTheme.typography.bodySmall,
-                textAlign = TextAlign.Justify
-            )
-            HorizontalDivider()
-            Row(
-                modifier = Modifier.padding(horizontal = 12.dp)
+            Column(
+                Modifier.weight(0.65f),
+                verticalArrangement = Arrangement.spacedBy(6.dp)
             ) {
-                Spacer(modifier = Modifier.weight(1f))
                 Text(
-                    text = stringResource(id = R.string.see_more),
-                    style = MaterialTheme.typography.bodySmall,
+                    text = news.title,
+                    style = MaterialTheme.typography.titleSmall,
                     fontWeight = FontWeight.Bold,
-                    modifier = Modifier.clickable {
-                        onNewsDetail()
-                    }
+                    textAlign = TextAlign.Left,
+                    modifier = Modifier
+                        .sharedElement(
+                            rememberSharedContentState(key = "title-$index"),
+                            animatedVisibilityScope = animatedVisibilityScope
+                        )
                 )
+                Text(
+                    text = news.description.substring(0, news.description.length / 2),
+                    style = MaterialTheme.typography.bodySmall,
+                    textAlign = TextAlign.Justify,
+                    modifier = Modifier
+                        .sharedElement(
+                            rememberSharedContentState(key = "description-$index"),
+                            animatedVisibilityScope = animatedVisibilityScope
+                        )
+                )
+                HorizontalDivider()
+                Row(
+                    modifier = Modifier.padding(horizontal = 12.dp)
+                ) {
+                    Spacer(modifier = Modifier.weight(1f))
+                    Text(
+                        text = stringResource(id = R.string.see_more),
+                        style = MaterialTheme.typography.bodySmall,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.clickable {
+                            onNewsDetail()
+                        }
+                    )
+                }
             }
         }
     }

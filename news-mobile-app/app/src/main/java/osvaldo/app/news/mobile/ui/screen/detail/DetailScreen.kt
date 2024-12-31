@@ -2,14 +2,14 @@ package osvaldo.app.news.mobile.ui.screen.detail
 
 import android.content.Intent
 import android.net.Uri
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.scrollable
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -41,18 +41,25 @@ import osvaldo.app.news.mobile.R
 import osvaldo.app.news.mobile.domain.model.News
 import osvaldo.app.news.mobile.ui.viewmodel.NewsEvent
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
 @Composable
 fun DetailScreen(
     news: News,
-    onEvent: (NewsEvent) -> Unit
+    index: Int,
+    onEvent: (NewsEvent) -> Unit,
+    onBack: () -> Unit,
+    sharedTransitionScope: SharedTransitionScope,
+    animatedVisibilityScope: AnimatedVisibilityScope
 ) {
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {},
                 navigationIcon = {
-                    IconButton(onClick = { onEvent(NewsEvent.OnNewsDetail(null)) }) {
+                    IconButton(onClick = {
+                        onEvent(NewsEvent.OnNewsDetail(null))
+                        onBack()
+                    }) {
                         Icon(imageVector = Icons.Default.ArrowBack, contentDescription = null)
                     }
                 }
@@ -66,35 +73,51 @@ fun DetailScreen(
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(14.dp)
         ) {
-            Text(
-                text = news.title,
-                style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Bold
-            )
-            Text(
-                text = news.author,
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Light
-            )
-            Text(
-                text = news.description,
-                style = MaterialTheme.typography.bodyMedium,
-                textAlign = TextAlign.Justify
-            )
-            AsyncImage(
-                model = news.urlToImage,
-                contentDescription = null,
-                contentScale = ContentScale.FillWidth,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clip(RoundedCornerShape(8.dp))
-            )
-            Text(
-                text = news.publishedAt,
-                style = MaterialTheme.typography.bodyMedium,
-                fontWeight = FontWeight.Light
-            )
-            ReadFullNews(name = news.nameSource, url = news.url)
+            with(sharedTransitionScope) {
+                Text(
+                    text = news.title,
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier
+                        .sharedElement(
+                            rememberSharedContentState(key = "title-$index"),
+                            animatedVisibilityScope = animatedVisibilityScope
+                        )
+                )
+                Text(
+                    text = news.author,
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Light
+                )
+                Text(
+                    text = news.description,
+                    style = MaterialTheme.typography.bodyMedium,
+                    textAlign = TextAlign.Justify,
+                    modifier = Modifier
+                        .sharedElement(
+                            rememberSharedContentState(key = "description-$index"),
+                            animatedVisibilityScope = animatedVisibilityScope
+                        )
+                )
+                AsyncImage(
+                    model = news.urlToImage,
+                    contentDescription = null,
+                    contentScale = ContentScale.FillWidth,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(8.dp))
+                        .sharedElement(
+                            rememberSharedContentState(key = "image-$index"),
+                            animatedVisibilityScope = animatedVisibilityScope
+                        )
+                )
+                Text(
+                    text = news.publishedAt,
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontWeight = FontWeight.Light
+                )
+                ReadFullNews(name = news.nameSource, url = news.url)
+            }
         }
     }
 }
