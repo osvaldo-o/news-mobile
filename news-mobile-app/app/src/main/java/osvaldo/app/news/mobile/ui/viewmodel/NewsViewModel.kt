@@ -31,9 +31,9 @@ class NewsViewModel(
             is NewsEvent.OnChangeLanguage -> onChangeLanguage(event.language)
             is NewsEvent.OnChangeSearch -> onChangeSearch(event.search)
             NewsEvent.OnFilterActivated -> onFilterActivated()
-            is NewsEvent.OnNewsDetail -> onNewsDetail(event.news)
             NewsEvent.SearchNews -> getNews()
             is NewsEvent.OnChangeSortBy -> onChangeSortBy(event.sortBy)
+            is NewsEvent.OnNewsDetail -> onNewsDetail(event.news)
         }
     }
 

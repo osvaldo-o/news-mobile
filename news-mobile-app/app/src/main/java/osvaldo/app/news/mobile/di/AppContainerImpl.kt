@@ -17,10 +17,10 @@ class AppContainerImpl : AppContainer {
         .baseUrl(baseUrl)
         .build()
 
-    private val retrofiService: NewsService by lazy {
+    private val retrofitService: NewsService by lazy {
         retrofit.create(NewsService::class.java)
     }
     override val newsRepository: NewsRepository
-        get() = NewsRepositoryImpl(retrofiService)
+        get() = NewsRepositoryImpl(retrofitService)
 
 }

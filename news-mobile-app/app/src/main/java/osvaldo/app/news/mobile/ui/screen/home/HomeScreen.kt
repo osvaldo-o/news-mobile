@@ -1,6 +1,9 @@
 package osvaldo.app.news.mobile.ui.screen.home
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,11 +22,14 @@ import osvaldo.app.news.mobile.ui.viewmodel.NewsEvent
 import osvaldo.app.news.mobile.ui.viewmodel.NewsState
 import osvaldo.app.news.mobile.ui.viewmodel.UiState
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
 @Composable
 fun HomeScreen(
     uiState: UiState,
-    onEvent: (NewsEvent) -> Unit
+    onEvent: (NewsEvent) -> Unit,
+    sharedTransitionScope: SharedTransitionScope,
+    animatedVisibilityScope: AnimatedVisibilityScope,
+    navDetail: (index: Int) -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -57,7 +63,12 @@ fun HomeScreen(
                 is NewsState.Success ->
                     NewsView(
                         news = uiState.newsState.news,
-                        onNewsDetail = { onEvent(NewsEvent.OnNewsDetail(it)) }
+                        onNewsDetail = { news, index ->
+                            onEvent(NewsEvent.OnNewsDetail(news))
+                            navDetail(index)
+                        },
+                        sharedTransitionScope = sharedTransitionScope,
+                        animatedVisibilityScope = animatedVisibilityScope
                     )
             }
         }
@@ -72,7 +83,7 @@ fun CenterScreen(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-        component
+        component()
     }
 }
 

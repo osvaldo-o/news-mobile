@@ -91,4 +91,11 @@ dependencies {
 
     // Coil
     implementation(libs.io.coil)
+
+    // Compose animation
+    implementation(libs.androidx.compose.animation)
+
+    // Navigation compose
+    implementation(libs.androidx.compose.navigation)
+
 }
